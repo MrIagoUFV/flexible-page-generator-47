@@ -54,6 +54,13 @@ const Index = () => {
     }
   };
 
+  const handleUpdate = (newData: Partial<typeof landingData>) => {
+    setLandingData(prev => ({
+      ...prev,
+      ...newData
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -77,7 +84,7 @@ const Index = () => {
             )}
           </Button>
         </div>
-        <LandingPreview data={landingData} />
+        <LandingPreview data={landingData} onUpdate={handleUpdate} />
       </div>
     </div>
   );
