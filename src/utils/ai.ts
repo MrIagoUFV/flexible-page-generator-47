@@ -59,7 +59,7 @@ export async function generateAIContent(field: string, currentValue: string, ful
       messages: [{ role: "user", content: prompt }],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
-      max_tokens: 200000,
+      max_tokens: 32000, // Reduced to be within the model's limit
       top_p: 1,
       stream: false,
       stop: null
