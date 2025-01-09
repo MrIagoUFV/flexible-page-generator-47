@@ -4,6 +4,12 @@ import { Wand2, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { generateAIContent } from "@/utils/ai";
 
+interface Product {
+  name: string;
+  installments: string;
+  cash: string;
+}
+
 interface LandingPreviewProps {
   data: {
     hero: string;
@@ -11,11 +17,7 @@ interface LandingPreviewProps {
     subheadline: string;
     features: string[];
     about: string;
-    products: Array<{
-      name: string;
-      installments: string;
-      cash: string;
-    }>;
+    products: Product[];
     commitment: string;
     formHeadline: string;
     formCta: string;
@@ -36,8 +38,21 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
         const featuresArray = newContent.split(',').map(feature => feature.trim());
         onUpdate({ [field]: featuresArray });
       } else if (field === 'products') {
-        const productsArray = JSON.parse(newContent);
-        onUpdate({ [field]: productsArray });
+        try {
+          const productsArray = JSON.parse(newContent);
+          if (Array.isArray(productsArray)) {
+            onUpdate({ [field]: productsArray });
+          } else {
+            throw new Error('Products must be an array');
+          }
+        } catch (error) {
+          console.error('Failed to parse products:', error);
+          toast({
+            title: "Erro",
+            description: "Formato inválido para produtos",
+            variant: "destructive",
+          });
+        }
       } else {
         onUpdate({ [field]: newContent });
       }
@@ -73,24 +88,32 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
     </Button>
   );
 
-  // Ensure data.features and data.products have default values
-  const features = data.features || [];
-  const products = data.products || [];
+  // Ensure data properties have default values
+  const features = Array.isArray(data.features) ? data.features : [];
+  const products = Array.isArray(data.products) ? data.products : [];
+  const hero = data.hero || '';
+  const headline = data.headline || '';
+  const subheadline = data.subheadline || '';
+  const about = data.about || '';
+  const commitment = data.commitment || '';
+  const formHeadline = data.formHeadline || '';
+  const formCta = data.formCta || '';
+  const cta = data.cta || '';
 
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       <section className="relative group text-center py-20 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
-        <RegenerateButton field="hero" value={data.hero || ''} />
-        <h1 className="text-5xl font-bold mb-4">{data.hero || ''}</h1>
-        <h2 className="text-3xl font-semibold mb-4">{data.headline || ''}</h2>
-        <p className="text-xl text-muted-foreground">{data.subheadline || ''}</p>
+        <RegenerateButton field="hero" value={hero} />
+        <h1 className="text-5xl font-bold mb-4">{hero}</h1>
+        <h2 className="text-3xl font-semibold mb-4">{headline}</h2>
+        <p className="text-xl text-muted-foreground">{subheadline}</p>
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="about" value={data.about || ''} />
+        <RegenerateButton field="about" value={about} />
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-semibold mb-4 text-center">Sobre Nós</h2>
-          <p className="text-lg text-muted-foreground">{data.about || ''}</p>
+          <p className="text-lg text-muted-foreground">{about}</p>
         </div>
       </section>
 
@@ -121,32 +144,32 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="commitment" value={data.commitment || ''} />
+        <RegenerateButton field="commitment" value={commitment} />
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-semibold mb-4">Nosso Compromisso</h2>
-          <p className="text-lg text-muted-foreground">{data.commitment || ''}</p>
+          <p className="text-lg text-muted-foreground">{commitment}</p>
         </div>
       </section>
 
       <section className="relative group bg-card p-8 rounded-lg">
-        <RegenerateButton field="formHeadline" value={data.formHeadline || ''} />
+        <RegenerateButton field="formHeadline" value={formHeadline} />
         <div className="max-w-md mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-6">{data.formHeadline || ''}</h2>
+          <h2 className="text-3xl font-semibold mb-6">{formHeadline}</h2>
           <div className="space-y-4">
             <input type="text" placeholder="Nome" className="w-full p-2 rounded border" />
             <input type="email" placeholder="E-mail" className="w-full p-2 rounded border" />
             <input type="tel" placeholder="WhatsApp" className="w-full p-2 rounded border" />
             <Button size="lg" className="w-full">
-              {data.formCta || ''}
+              {formCta}
             </Button>
           </div>
         </div>
       </section>
 
       <section className="relative group text-center py-12">
-        <RegenerateButton field="cta" value={data.cta || ''} />
+        <RegenerateButton field="cta" value={cta} />
         <Button size="lg" className="text-lg px-8">
-          {data.cta || ''}
+          {cta}
         </Button>
       </section>
     </div>
