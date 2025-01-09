@@ -73,28 +73,32 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
     </Button>
   );
 
+  // Ensure data.features and data.products have default values
+  const features = data.features || [];
+  const products = data.products || [];
+
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       <section className="relative group text-center py-20 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg">
-        <RegenerateButton field="hero" value={data.hero} />
-        <h1 className="text-5xl font-bold mb-4">{data.hero}</h1>
-        <h2 className="text-3xl font-semibold mb-4">{data.headline}</h2>
-        <p className="text-xl text-muted-foreground">{data.subheadline}</p>
+        <RegenerateButton field="hero" value={data.hero || ''} />
+        <h1 className="text-5xl font-bold mb-4">{data.hero || ''}</h1>
+        <h2 className="text-3xl font-semibold mb-4">{data.headline || ''}</h2>
+        <p className="text-xl text-muted-foreground">{data.subheadline || ''}</p>
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="about" value={data.about} />
+        <RegenerateButton field="about" value={data.about || ''} />
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-semibold mb-4 text-center">Sobre Nós</h2>
-          <p className="text-lg text-muted-foreground">{data.about}</p>
+          <p className="text-lg text-muted-foreground">{data.about || ''}</p>
         </div>
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="features" value={data.features.join(', ')} />
+        <RegenerateButton field="features" value={features.join(', ')} />
         <h2 className="text-3xl font-semibold mb-8 text-center">Por Que Escolher a LL Motos?</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          {data.features.map((feature, index) => (
+          {features.map((feature, index) => (
             <div key={index} className="p-6 bg-card rounded-lg shadow-sm">
               <h3 className="text-xl font-semibold mb-2">{feature}</h3>
             </div>
@@ -103,10 +107,10 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="products" value={JSON.stringify(data.products)} />
+        <RegenerateButton field="products" value={JSON.stringify(products)} />
         <h2 className="text-3xl font-semibold mb-8 text-center">Ofertas Especiais</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          {data.products.map((product, index) => (
+          {products.map((product, index) => (
             <div key={index} className="p-6 bg-card rounded-lg shadow-sm">
               <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
               <p className="text-lg">12x: R$ {product.installments}</p>
@@ -117,32 +121,32 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
       </section>
 
       <section className="relative group">
-        <RegenerateButton field="commitment" value={data.commitment} />
+        <RegenerateButton field="commitment" value={data.commitment || ''} />
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-semibold mb-4">Nosso Compromisso</h2>
-          <p className="text-lg text-muted-foreground">{data.commitment}</p>
+          <p className="text-lg text-muted-foreground">{data.commitment || ''}</p>
         </div>
       </section>
 
       <section className="relative group bg-card p-8 rounded-lg">
-        <RegenerateButton field="formHeadline" value={data.formHeadline} />
+        <RegenerateButton field="formHeadline" value={data.formHeadline || ''} />
         <div className="max-w-md mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-6">{data.formHeadline}</h2>
+          <h2 className="text-3xl font-semibold mb-6">{data.formHeadline || ''}</h2>
           <div className="space-y-4">
             <input type="text" placeholder="Nome" className="w-full p-2 rounded border" />
             <input type="email" placeholder="E-mail" className="w-full p-2 rounded border" />
             <input type="tel" placeholder="WhatsApp" className="w-full p-2 rounded border" />
             <Button size="lg" className="w-full">
-              {data.formCta}
+              {data.formCta || ''}
             </Button>
           </div>
         </div>
       </section>
 
       <section className="relative group text-center py-12">
-        <RegenerateButton field="cta" value={data.cta} />
+        <RegenerateButton field="cta" value={data.cta || ''} />
         <Button size="lg" className="text-lg px-8">
-          {data.cta}
+          {data.cta || ''}
         </Button>
       </section>
     </div>
