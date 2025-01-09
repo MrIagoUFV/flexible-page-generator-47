@@ -32,6 +32,26 @@ const initialData = {
       "name": "Óleo 20w50 Mineral GT",
       "installments": "24,00",
       "cash": "20,00"
+    },
+    {
+      "name": "Bateria 5Ah ERBS (12 meses de garantia)",
+      "installments": "175,00",
+      "cash": "150,00"
+    },
+    {
+      "name": "Câmara 18 Dianteira/Traseira de CG",
+      "installments": "30,00",
+      "cash": "25,00"
+    },
+    {
+      "name": "Patim/Lona de Freio Dianteira/Traseira de CG e Biz",
+      "installments": "28,00",
+      "cash": "25,00"
+    },
+    {
+      "name": "Pneu 90/90 18 TT Ira Soho",
+      "installments": "200,00",
+      "cash": "165,00"
     }
   ],
   "commitment": "Nosso compromisso é oferecer produtos e serviços de qualidade para manter sua moto segura, potente e com o melhor custo-benefício. Estamos prontos para atender você com variedade, preços acessíveis e um atendimento personalizado.",
