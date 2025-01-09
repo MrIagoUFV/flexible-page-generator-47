@@ -1,7 +1,8 @@
 import Groq from 'groq-sdk';
 
 const groq = new Groq({
-  apiKey: 'YOUR_API_KEY' // Em um ambiente real, isso viria de uma variável de ambiente segura
+  apiKey: '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',
+  dangerouslyAllowBrowser: true // Permitindo uso no navegador
 });
 
 export async function generateAIContent(label: string, currentValue: string): Promise<string> {
