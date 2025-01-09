@@ -36,7 +36,7 @@ export async function generateAIContent(field: string, currentValue: string, ful
         - Hero: ${fullContext.hero}
         - Headline: ${fullContext.headline}
         - Subheadline: ${fullContext.subheadline}
-        - Features: ${fullContext.features.join(', ')}
+        - Features: ${fullContext.features?.join(', ')}
         - About: ${fullContext.about}
         - Products: ${JSON.stringify(fullContext.products)}
         - Commitment: ${fullContext.commitment}
@@ -55,13 +55,8 @@ export async function generateAIContent(field: string, currentValue: string, ful
       Responda APENAS com o novo texto para este campo específico, sem explicações adicionais.`;
     }
 
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
+    const completion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       max_tokens: 200000,
@@ -70,7 +65,13 @@ export async function generateAIContent(field: string, currentValue: string, ful
       stop: null
     });
 
-    return chatCompletion.choices[0]?.message?.content || 'Erro ao gerar conteúdo';
+    const content = completion.choices[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error('No content generated');
+    }
+
+    return content;
   } catch (error) {
     console.error('Erro ao gerar conteúdo com IA:', error);
     throw error;
