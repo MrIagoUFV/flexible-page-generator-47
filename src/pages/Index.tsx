@@ -23,6 +23,7 @@ const Index = () => {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [landingData, setLandingData] = useState(initialData);
+  const [currentSection, setCurrentSection] = useState<string>("");
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -35,10 +36,22 @@ const Index = () => {
     }
 
     setIsGenerating(true);
+    const sections = ['hero', 'headline', 'subheadline', 'features', 'cta', 'about'];
+    const newData = { ...landingData };
+
     try {
-      const newContent = await generateAIContent("landing_page", prompt);
-      const parsedContent = JSON.parse(newContent);
-      setLandingData(parsedContent);
+      for (const section of sections) {
+        setCurrentSection(section);
+        const newContent = await generateAIContent(section, prompt);
+        
+        if (section === 'features') {
+          newData[section] = newContent.split(',').map(feature => feature.trim());
+        } else {
+          newData[section] = newContent;
+        }
+      }
+
+      setLandingData(newData);
       toast({
         title: "Sucesso",
         description: "Landing page gerada com sucesso!",
@@ -51,6 +64,7 @@ const Index = () => {
       });
     } finally {
       setIsGenerating(false);
+      setCurrentSection("");
     }
   };
 
@@ -62,7 +76,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {isGenerating && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin mb-4" />
+          <p className="text-lg font-medium">Gerando {currentSection}...</p>
+        </div>
+      )}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex gap-2">
           <Input
