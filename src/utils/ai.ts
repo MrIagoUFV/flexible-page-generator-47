@@ -2,16 +2,31 @@ import Groq from 'groq-sdk';
 
 const groq = new Groq({
   apiKey: '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',
-  dangerouslyAllowBrowser: true // Permitindo uso no navegador
+  dangerouslyAllowBrowser: true
 });
 
-export async function generateAIContent(label: string, currentValue: string): Promise<string> {
+export async function generateAIContent(field: string, currentValue: string): Promise<string> {
   try {
-    const prompt = `Você é um assistente especializado em marketing digital. 
-    Gere um texto criativo e persuasivo para um campo "${label}" de uma landing page.
-    O texto atual é: "${currentValue}".
-    Mantenha o tom profissional e adequado ao contexto.
-    Responda APENAS com o novo texto, sem explicações adicionais.`;
+    let prompt = "";
+    
+    if (field === "landing_page") {
+      prompt = `Crie uma landing page com o seguinte prompt do usuário: "${currentValue}".
+      Retorne apenas um objeto JSON com os seguintes campos:
+      {
+        "hero": "título principal",
+        "headline": "subtítulo",
+        "subheadline": "descrição curta",
+        "features": ["feature 1", "feature 2", "feature 3"],
+        "cta": "texto do botão",
+        "about": "texto sobre"
+      }`;
+    } else {
+      prompt = `Você é um especialista em marketing digital. 
+      Gere um texto criativo e persuasivo para o campo "${field}" de uma landing page.
+      O texto atual é: "${currentValue}".
+      Mantenha o tom profissional e adequado ao contexto.
+      Responda APENAS com o novo texto, sem explicações adicionais.`;
+    }
 
     const chatCompletion = await groq.chat.completions.create({
       messages: [
@@ -22,7 +37,7 @@ export async function generateAIContent(label: string, currentValue: string): Pr
       ],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
-      max_tokens: 100,
+      max_tokens: 500,
       top_p: 1,
       stream: false,
       stop: null
