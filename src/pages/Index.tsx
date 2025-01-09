@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Wand2, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -7,16 +7,37 @@ import { generateAIContent } from "@/utils/ai";
 import LandingPreview from "@/components/LandingPreview";
 
 const initialData = {
-  "hero": "Bem-vindo ao Futuro",
-  "headline": "Transforme suas Ideias em Realidade",
-  "subheadline": "Uma plataforma inovadora para criar landing pages incríveis",
+  "hero": "Bem-vindo à LL Motos",
+  "headline": "As Melhores Peças e Manutenções para Sua Moto",
+  "subheadline": "Variedade, preços competitivos e condições exclusivas em até 12x sem juros ou desconto à vista",
   "features": [
-    "Design Intuitivo",
-    "Personalização Total",
-    "Resultados Rápidos"
+    "Variedade de Peças",
+    "Preços Competitivos",
+    "Atendimento Especializado",
+    "Manutenção de Qualidade"
   ],
-  "cta": "Comece Agora",
-  "about": "Somos uma empresa dedicada a transformar a maneira como você cria landing pages."
+  "about": "Fundada em 2018, a LL Motos nasceu da paixão por motocicletas e pela vontade de oferecer o melhor em peças e manutenção. Nosso objetivo é garantir a segurança, o conforto e a performance da sua moto, sempre com atendimento de qualidade e preços acessíveis.",
+  "products": [
+    {
+      "name": "Óleo 20w50 Mineral Mobil",
+      "installments": "33,00",
+      "cash": "28,00"
+    },
+    {
+      "name": "Óleo 10w30 Semi sintético Mobil",
+      "installments": "38,00",
+      "cash": "33,00"
+    },
+    {
+      "name": "Óleo 20w50 Mineral GT",
+      "installments": "24,00",
+      "cash": "20,00"
+    }
+  ],
+  "commitment": "Nosso compromisso é oferecer produtos e serviços de qualidade para manter sua moto segura, potente e com o melhor custo-benefício. Estamos prontos para atender você com variedade, preços acessíveis e um atendimento personalizado.",
+  "formHeadline": "Garanta o Melhor para Sua Moto!",
+  "formCta": "Solicitar Orçamento",
+  "cta": "Aproveite as Ofertas Agora"
 };
 
 const Index = () => {
@@ -36,7 +57,7 @@ const Index = () => {
     }
 
     setIsGenerating(true);
-    const sections = ['hero', 'headline', 'subheadline', 'features', 'cta', 'about'];
+    const sections = ['hero', 'headline', 'subheadline', 'features', 'about', 'products', 'commitment', 'formHeadline', 'formCta', 'cta'];
     const newData = { ...landingData };
 
     try {
@@ -46,6 +67,8 @@ const Index = () => {
         
         if (section === 'features') {
           newData[section] = newContent.split(',').map(feature => feature.trim());
+        } else if (section === 'products') {
+          newData[section] = JSON.parse(newContent);
         } else {
           newData[section] = newContent;
         }
@@ -85,17 +108,18 @@ const Index = () => {
       )}
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex gap-2">
-          <Input
+          <Textarea
             placeholder="Descreva a landing page que deseja criar"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="flex-1"
+            className="flex-1 min-h-[100px]"
           />
           <Button
             onClick={handleGenerate}
             variant="outline"
             size="icon"
             disabled={isGenerating}
+            className="h-auto"
           >
             {isGenerating ? (
               <Loader2 className="h-4 w-4 animate-spin" />

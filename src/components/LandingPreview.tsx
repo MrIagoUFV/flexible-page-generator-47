@@ -10,8 +10,16 @@ interface LandingPreviewProps {
     headline: string;
     subheadline: string;
     features: string[];
-    cta: string;
     about: string;
+    products: Array<{
+      name: string;
+      installments: string;
+      cash: string;
+    }>;
+    commitment: string;
+    formHeadline: string;
+    formCta: string;
+    cta: string;
   };
   onUpdate: (newData: Partial<LandingPreviewProps['data']>) => void;
 }
@@ -27,6 +35,9 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
       if (field === 'features') {
         const featuresArray = newContent.split(',').map(feature => feature.trim());
         onUpdate({ [field]: featuresArray });
+      } else if (field === 'products') {
+        const productsArray = JSON.parse(newContent);
+        onUpdate({ [field]: productsArray });
       } else {
         onUpdate({ [field]: newContent });
       }
@@ -72,8 +83,17 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
       </section>
 
       <section className="relative group">
+        <RegenerateButton field="about" value={data.about} />
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-semibold mb-4 text-center">Sobre Nós</h2>
+          <p className="text-lg text-muted-foreground">{data.about}</p>
+        </div>
+      </section>
+
+      <section className="relative group">
         <RegenerateButton field="features" value={data.features.join(', ')} />
-        <div className="grid md:grid-cols-3 gap-8">
+        <h2 className="text-3xl font-semibold mb-8 text-center">Por Que Escolher a LL Motos?</h2>
+        <div className="grid md:grid-cols-2 gap-8">
           {data.features.map((feature, index) => (
             <div key={index} className="p-6 bg-card rounded-lg shadow-sm">
               <h3 className="text-xl font-semibold mb-2">{feature}</h3>
@@ -82,10 +102,40 @@ const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
         </div>
       </section>
 
-      <section className="relative group text-center py-12">
-        <RegenerateButton field="about" value={data.about} />
-        <div className="max-w-2xl mx-auto">
-          <p className="text-lg text-muted-foreground">{data.about}</p>
+      <section className="relative group">
+        <RegenerateButton field="products" value={JSON.stringify(data.products)} />
+        <h2 className="text-3xl font-semibold mb-8 text-center">Ofertas Especiais</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          {data.products.map((product, index) => (
+            <div key={index} className="p-6 bg-card rounded-lg shadow-sm">
+              <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+              <p className="text-lg">12x: R$ {product.installments}</p>
+              <p className="text-lg font-semibold text-primary">À vista: R$ {product.cash}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative group">
+        <RegenerateButton field="commitment" value={data.commitment} />
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold mb-4">Nosso Compromisso</h2>
+          <p className="text-lg text-muted-foreground">{data.commitment}</p>
+        </div>
+      </section>
+
+      <section className="relative group bg-card p-8 rounded-lg">
+        <RegenerateButton field="formHeadline" value={data.formHeadline} />
+        <div className="max-w-md mx-auto text-center">
+          <h2 className="text-3xl font-semibold mb-6">{data.formHeadline}</h2>
+          <div className="space-y-4">
+            <input type="text" placeholder="Nome" className="w-full p-2 rounded border" />
+            <input type="email" placeholder="E-mail" className="w-full p-2 rounded border" />
+            <input type="tel" placeholder="WhatsApp" className="w-full p-2 rounded border" />
+            <Button size="lg" className="w-full">
+              {data.formCta}
+            </Button>
+          </div>
         </div>
       </section>
 

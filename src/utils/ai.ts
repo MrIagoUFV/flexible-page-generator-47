@@ -17,8 +17,18 @@ export async function generateAIContent(field: string, currentValue: string, ful
         "headline": "subtítulo",
         "subheadline": "descrição curta",
         "features": ["feature 1", "feature 2", "feature 3"],
-        "cta": "texto do botão",
-        "about": "texto sobre"
+        "about": "texto sobre a empresa",
+        "products": [
+          {
+            "name": "nome do produto",
+            "installments": "valor em 12x",
+            "cash": "valor à vista"
+          }
+        ],
+        "commitment": "texto de compromisso",
+        "formHeadline": "título do formulário",
+        "formCta": "texto do botão do formulário",
+        "cta": "texto do botão principal"
       }`;
     } else {
       const contextDescription = fullContext ? `
@@ -27,8 +37,12 @@ export async function generateAIContent(field: string, currentValue: string, ful
         - Headline: ${fullContext.headline}
         - Subheadline: ${fullContext.subheadline}
         - Features: ${fullContext.features.join(', ')}
-        - CTA: ${fullContext.cta}
         - About: ${fullContext.about}
+        - Products: ${JSON.stringify(fullContext.products)}
+        - Commitment: ${fullContext.commitment}
+        - Form Headline: ${fullContext.formHeadline}
+        - Form CTA: ${fullContext.formCta}
+        - CTA: ${fullContext.cta}
       ` : '';
 
       prompt = `Você é um especialista em marketing digital. 
@@ -50,7 +64,7 @@ export async function generateAIContent(field: string, currentValue: string, ful
       ],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 200000,
       top_p: 1,
       stream: false,
       stop: null
