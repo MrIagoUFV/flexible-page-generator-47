@@ -13,16 +13,24 @@ interface LandingPreviewProps {
     cta: string;
     about: string;
   };
+  onUpdate: (newData: Partial<LandingPreviewProps['data']>) => void;
 }
 
-const LandingPreview: React.FC<LandingPreviewProps> = ({ data }) => {
+const LandingPreview: React.FC<LandingPreviewProps> = ({ data, onUpdate }) => {
   const [regeneratingField, setRegeneratingField] = useState<string | null>(null);
 
   const handleRegenerate = async (field: string, currentValue: string) => {
     setRegeneratingField(field);
     try {
-      const newContent = await generateAIContent(field, currentValue);
-      // TODO: Update the specific field in the parent component
+      const newContent = await generateAIContent(field, currentValue, data);
+      
+      if (field === 'features') {
+        const featuresArray = newContent.split(',').map(feature => feature.trim());
+        onUpdate({ [field]: featuresArray });
+      } else {
+        onUpdate({ [field]: newContent });
+      }
+      
       toast({
         title: "Sucesso",
         description: `${field} atualizado com sucesso!`,
